@@ -33,10 +33,15 @@ def EditDist(x, y):
             recMatrix[m+1, n+1] = min(cmpList)
     return recMatrix[lenx, leny]
 
+def NormEditDist(x, y):
+    '''返回标准化的编辑距离
+    '''
+    return EditDist(x, y) * 1.0 / max(len(x), len(y))
+
 
 #unit test
 if __name__ == '__main__':
     s1 = raw_input("s1:").decode("utf-8")
     s2 = raw_input("s2:").decode("utf-8")
     print EditDist(s1, s2)
-
+    print NormEditDist(s1, s2)
