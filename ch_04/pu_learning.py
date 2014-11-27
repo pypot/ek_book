@@ -8,13 +8,6 @@ from sklearn.naive_bayes import BernoulliNB
 import cPickle as pickle
 import numpy
 import random
-
-SAMPLE_CNT = 10000
-TRAIN_CNT = 8000
-
-
-def PatitionalLabel(Y):
-    return numpy.hstack((Y[:len(Y)/2], numpy.zeros(len(Y) - len(Y)/2)))
  
 
 class PU_Samples(object):
@@ -30,7 +23,7 @@ class PU_Samples(object):
 
 
 class PU_RealNegativeFinder(object):
-    def __init__(self, core_estimator="", core_parameters=None, spy_proportion=0.20, thres_level=0.05, iter_times=5):
+    def __init__(self, core_estimator="", core_parameters=None, spy_proportion=0.20, thres_level=0.15, iter_times=50):
         #self.core_estimator = BernoulliNB()
         self.core_estimator = LogisticRegression()
         self.spy_proportion = spy_proportion
@@ -44,9 +37,9 @@ class PU_RealNegativeFinder(object):
     def _spy_sampling(self):
         random.shuffle(self.data_buf_.positive)
         spyCnt = len(self.data_buf_.positive) * self.spy_proportion
-        self.data_buf_.spy = self.data_buf_.positive[:spyCnt]
-        self.data_buf_.train_positive = self.data_buf_.positive[spyCnt:]
-        self.data_buf_.train_negative = numpy.vstack((self.data_buf_.unlabeled, self.data_buf_.spy))
+        self.data_buf_.spy = self.data_buf_.positive[:spyCnt].copy()
+        self.data_buf_.train_positive = self.data_buf_.positive[spyCnt:].copy()
+        self.data_buf_.train_negative = numpy.vstack((self.data_buf_.unlabeled, self.data_buf_.spy)).copy()
         
     
     def _core_fit(self):
@@ -91,8 +84,8 @@ class PU_RealNegativeFinder(object):
     
     def find_real_negative(self, X, Y):
         self.real_negative_ = X[Y == 0]
-        self.data_buf_ = PU_Samples(X[Y == 1], X[Y == 0])
         for i in xrange(self.iter_times):
+            self.data_buf_ = PU_Samples(X[Y == 1], X[Y == 0])
             self._spy_sampling()
             self._core_fit()
             self._find_negative()
