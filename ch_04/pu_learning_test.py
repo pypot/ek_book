@@ -50,7 +50,7 @@ def ReadUnbalancedSamples(filePath, label_recall=0.5):
 
 
 if __name__ == "__main__":
-    DATA_PATH = r"D:\pudata1.npy"
+    DATA_PATH = "data/pu_learn_data1.txt"
     if __CONF_MAKE_NEW_DATA__:
         MakeUnbalancedSamples(DATA_PATH)
     a, b, c, d = ReadUnbalancedSamples(DATA_PATH)

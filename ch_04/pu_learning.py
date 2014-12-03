@@ -7,7 +7,7 @@ from sklearn.naive_bayes import BernoulliNB
 
 import cPickle as pickle
 import numpy
-import random
+from numpy import random
  
 
 class PU_Samples(object):
@@ -23,7 +23,7 @@ class PU_Samples(object):
 
 
 class PU_RealNegativeFinder(object):
-    def __init__(self, core_estimator="", core_parameters=None, spy_proportion=0.20, thres_level=0.15, iter_times=50):
+    def __init__(self, core_estimator="", core_parameters=None, spy_proportion=0.20, thres_level=0.15, iter_times=20):
         #self.core_estimator = BernoulliNB()
         self.core_estimator = LogisticRegression()
         self.spy_proportion = spy_proportion
